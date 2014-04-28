@@ -7,6 +7,8 @@
 
 
 #include <XBee.h>
+#include <OneWire.h>
+#include <DallasTemperature.h>
 
 // xbee
 uint8_t text[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; // this array will be used to transport data inbetween the XBees, id = 0
@@ -14,29 +16,37 @@ XBee xbee = XBee();
 XBeeAddress64 remoteAddress = XBeeAddress64(0x0013a200, 0x40891DE1); // this is the network address of the XBee cordinator which is where we want this node to send it's data sets
 ZBTxRequest zbTx = ZBTxRequest(remoteAddress, text, sizeof(text));
 
-// analog sensors
-int tmp102Address = 0x48; // hardware address for the I2C tmp102 sensor
-int s_tempPin = 3; //analog pin for soil temperature reading
-int s_tempReading = 12;
-int temt6000Pin = 2; // analog pin for light level reading
-int photocellReading=15;
-int avg = 123 ;
 
+// Data wire is plugged into pin 3 on the Arduino
+#define ONE_WIRE_BUS 3
 
-// humidity
-float val = 0;
-float RH = 0;
-int RH2 = 0;
-float my_room_temperature = 20; //in degrees C, fall back to ensure loop won't get stuck in case we don't get a reading from the tmp102
-float max_voltage = 3.27;
-float Zerov = 0.8;
-int celsius = 20;
-int flag =0 ;
+// Setup a oneWire instance to communicate with any OneWire devices
+OneWire oneWire(ONE_WIRE_BUS);
+
+// Pass our oneWire reference to Dallas Temperature. 
+DallasTemperature sensors(&oneWire);
+
+// Assign the addresses of your 1-Wire temp sensors.
+// See the tutorial on how to obtain these addresses:
+// http://www.hacktronics.com/Tutorials/arduino-1-wire-address-finder.html
+
+DeviceAddress T1 = { 0x28, 0x84, 0x63, 0xD0, 0x4, 0x0, 0x0, 0xE8 };
+DeviceAddress T2 = { 0x28, 0x56, 0x53, 0xD0, 0x4, 0x0, 0x0, 0xC6 };
+DeviceAddress T3 = { 0x28, 0x37, 0x90, 0xD0, 0x04, 0x00, 0x00, 0x5E };
+ 
+int T1_R = 0;
+int T2_R = 0;
+int T3_R = 0;
  
 void setup(void) {
   Serial.begin(9600);
   xbee.setSerial(Serial);
- 
+   // Start up the library
+  sensors.begin();
+  // set the resolution to 10 bit (good enough?)
+  sensors.setResolution(T1, 10);
+  sensors.setResolution(T2, 10);
+  sensors.setResolution(T3, 10);
 }
  
 void loop(void) {
@@ -48,26 +58,20 @@ void loop(void) {
   digitalWrite(13, LOW);    // set the LED off
   delay(1000);
   
+T1_R = ((sensors.getTempC(T1))*100);
+T2_R = ((sensors.getTempC(T2))*100);
+T3_R = ((sensors.getTempC(T3))*100);
 
-
- text[0] = s_tempReading >> 8 & 0xff;
- text[1] = s_tempReading & 0xff;
-  
-
- text[2] = photocellReading >> 8 & 0xff;
- text[3] = photocellReading & 0xff;
- 
-
- text[7] = avg >> 8 & 0xff;
- text[8] = avg & 0xff;
- 
-
- 
- // this simply fills the readings we acquired above into our XBee payload array
- text[4] = flag;
- text[5] = celsius;
- text[6] = RH2;
-  
+ text[0] = T1_R;
+ text[1] = T2_R;
+ text[2] = T3_R;
+ text[3] = 1;
+ text[4] = 2;
+ text[5] = 3;
+ text[6] = 4;
+ text[7] = 5;
+ text[8] = 6;
+ text[9] = 7;
  
 
   

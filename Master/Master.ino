@@ -9,7 +9,7 @@
 #include <SPI.h>
 #include <Ethernet.h>
 byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
-IPAddress ip(10.0.0.60);
+IPAddress ip(10,0,0,60);
 
 EthernetServer server(80);
 
@@ -18,14 +18,14 @@ ZBRxResponse zbRx = ZBRxResponse();
 uint8_t text[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; //initialises the data array with 0s
 
 //local variables to submit the readings from the payload to the php form
-int A = 0;
-int B = 0;
-int C = 0;
+float A = 0;
+float B = 0;
+float C = 0;
 int D = 0;
 int E = 0;
 int F = 0;
 int G = 0;
-int flag;
+
 
 void setup () {
   delay(1000);
@@ -71,7 +71,7 @@ void loop () {
            client.println(D);
            client.println(E);
            client.println(F);
-            client.print(" is ");
+           
           
                 
           
@@ -107,32 +107,15 @@ void loop () {
          
           text [i] = zbRx.getData(i);
      }
- //this rebuilds our 10-bit readings which we had stored in two bytes     
- uint8_t analogHigh = text[0];
- uint8_t analogLow = text[1];
- int value1 = analogLow + (analogHigh * 256);
-  //Serial.println(value1);   
- 
-  //this rebuilds our 10-bit readings which we had stored in two bytes
- uint8_t analogHigh2 = text[2];
- uint8_t analogLow2 = text[3];
- int value2 = analogLow2 + (analogHigh2 * 256);
-  //Serial.println(value2);
-  
-   //this rebuilds our 10-bit readings which we had stored in two bytes
- uint8_t analogHigh3 = text[7];
- uint8_t analogLow3 = text[8];
- int value3 = analogLow3 + (analogHigh3 * 256);
-  //Serial.println(value3);
+
      
      
-A = value1; //assigns the sensor readings to variables A-F which we can then send to the terminal and submit to the php form
-B = value2;
-C = text[5];
-D = text[6];
-E = text[9];
-F = value3;
-int flag = text[4];
+A = (text[0] / 100); //assigns the sensor readings to variables A-F which we can then send to the terminal and submit to the php form
+B = (text[1] / 100);
+C = (text[2]  /100);
+D = text[3];
+E = text[4];
+
 //Serial.println(flag);
     } 
   }
