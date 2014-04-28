@@ -24,6 +24,7 @@ int C = 0;
 int D = 0;
 int E = 0;
 int F = 0;
+int G = 0;
 int flag;
 
 void setup () {
