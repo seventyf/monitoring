@@ -110,12 +110,16 @@ void loop () {
 
      
      
-A = (text[0] / 100); //assigns the sensor readings to variables A-F which we can then send to the terminal and submit to the php form
-B = (text[1] / 100);
-C = (text[2]  /100);
-D = text[3];
-E = text[4];
+D = text[0] ; //assigns the sensor readings to variables A-F which we can then send to the terminal and submit to the php form
+E = text[1];
+F = text[2] ;
+A = D /100;
+B=  E /100;
+C = F /100;
 
+ uint8_t analogHigh = text[0];
+ uint8_t analogLow = text[1];
+ int value1 = analogLow + (analogHigh * 256);
 //Serial.println(flag);
     } 
   }

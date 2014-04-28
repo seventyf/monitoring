@@ -34,9 +34,12 @@ DeviceAddress T1 = { 0x28, 0x84, 0x63, 0xD0, 0x4, 0x0, 0x0, 0xE8 };
 DeviceAddress T2 = { 0x28, 0x56, 0x53, 0xD0, 0x4, 0x0, 0x0, 0xC6 };
 DeviceAddress T3 = { 0x28, 0x37, 0x90, 0xD0, 0x04, 0x00, 0x00, 0x5E };
  
-int T1_R = 0;
-int T2_R = 0;
-int T3_R = 0;
+int T1_S = 0;
+int T2_S = 0;
+int T3_S = 0;
+float T1_R = 0;
+float T2_R = 0;
+float T3_R = 0;
  
 void setup(void) {
   Serial.begin(9600);
@@ -57,14 +60,17 @@ void loop(void) {
   delay(1000);              // wait for a second
   digitalWrite(13, LOW);    // set the LED off
   delay(1000);
-  
-T1_R = ((sensors.getTempC(T1))*100);
-T2_R = ((sensors.getTempC(T2))*100);
-T3_R = ((sensors.getTempC(T3))*100);
+sensors.requestTemperatures();  
+T1_R = sensors.getTempC(T1);
+T2_R = sensors.getTempC(T2);
+T3_R = sensors.getTempC(T3);
 
- text[0] = T1_R;
- text[1] = T2_R;
- text[2] = T3_R;
+T1_S = T1_R *100;
+T2_S = T2_R *100;
+T3_S = T3_R *100;
+ text[0] = T1_S;
+ text[1] = T2_S;
+ text[2] = T3_S;
  text[3] = 1;
  text[4] = 2;
  text[5] = 3;
@@ -73,10 +79,11 @@ T3_R = ((sensors.getTempC(T3))*100);
  text[8] = 6;
  text[9] = 7;
  
-
+ text[0] = val2 >> 8 & 0xff;
+ text[1] = val2 & 0xff;
   
   xbee.send(zbTx); //this sends our XBee payload array to the coordinator
-  delay(180000); //wait 3min before we acquire and send another set of sensor readings
+  delay(3000); //wait 3min before we acquire and send another set of sensor readings
 
   
 }
