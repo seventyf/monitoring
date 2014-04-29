@@ -21,10 +21,10 @@ uint8_t text[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; //initialises the data array 
 float A = 0;
 float B = 0;
 float C = 0;
-int D = 0;
-int E = 0;
-int F = 0;
-int G = 0;
+float D = 0;
+float E = 0;
+float F = 0;
+
 
 
 void setup () {
@@ -110,16 +110,20 @@ void loop () {
 
      
      
-D = text[0] ; //assigns the sensor readings to variables A-F which we can then send to the terminal and submit to the php form
-E = text[1];
-F = text[2] ;
+ uint8_t analogHigh = text[0];
+ uint8_t analogLow = text[1];
+ D = analogLow + (analogHigh * 256);
+  uint8_t analogHigh1 = text[2];
+ uint8_t analogLow1 = text[3];
+ E = analogLow1 + (analogHigh1 * 256);
+  uint8_t analogHigh2 = text[4];
+ uint8_t analogLow2 = text[5];
+ F = analogLow2 + (analogHigh2 * 256);
 A = D /100;
 B=  E /100;
 C = F /100;
 
- uint8_t analogHigh = text[0];
- uint8_t analogLow = text[1];
- int value1 = analogLow + (analogHigh * 256);
+
 //Serial.println(flag);
     } 
   }

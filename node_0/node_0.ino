@@ -68,19 +68,19 @@ T3_R = sensors.getTempC(T3);
 T1_S = T1_R *100;
 T2_S = T2_R *100;
 T3_S = T3_R *100;
- text[0] = T1_S;
- text[1] = T2_S;
- text[2] = T3_S;
- text[3] = 1;
- text[4] = 2;
- text[5] = 3;
- text[6] = 4;
- text[7] = 5;
- text[8] = 6;
- text[9] = 7;
+ text[0] = T1_S >> 8 & 0xff;
+ text[1] = T1_S & 0xff;
+ text[2] = T2_S >> 8 & 0xff;
+ text[3] = T2_S & 0xff;
+ text[4] = T3_S >> 8 & 0xff;
+ text[5] = T3_S & 0xff;
+ text[6] = 3;
+ text[7] = 4;
+ text[8] = 5;
+ text[9] = 6;
  
- text[0] = val2 >> 8 & 0xff;
- text[1] = val2 & 0xff;
+ 
+
   
   xbee.send(zbTx); //this sends our XBee payload array to the coordinator
   delay(3000); //wait 3min before we acquire and send another set of sensor readings
